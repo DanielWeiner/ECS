@@ -8,8 +8,8 @@ import {
     IParsedValidOperator,
     precedence
 } from "./Types";
-import Queue from '../util/Queue';
-import Stack from '../util/Stack';
+import Queue from '../../util/Queue';
+import Stack from '../../util/Stack';
 
 interface IBucket {
     attemptAdd(id: string): this;
