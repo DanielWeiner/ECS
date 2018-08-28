@@ -1,4 +1,6 @@
 .idea/
 js/
 node_modules/
-daiquiri.ts
+/daiquiri.ts
+!/ts
+**/*/.DS_Store
