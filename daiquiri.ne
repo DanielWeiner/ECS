@@ -205,5 +205,5 @@ alphaUnderNumTail ->
     | null {% emptyStr %}
 
 _ ->
-      [\s] _ {% emptyStr %}
+      [\r\n\t ] _ {% emptyStr %}
     | null {% emptyStr %}

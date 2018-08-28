@@ -5,6 +5,9 @@
   "main": "index.js",
   "author": "",
   "license": "ISC",
+  "scripts": {
+    "buildGrammar": "node_modules/.bin/nearleyc daiquiri.ne -o ts/daiquiri/Grammar.ts"
+  },
   "devDependencies": {
     "@types/chai": "^4.1.4",
     "@types/mocha": "^5.2.5",
