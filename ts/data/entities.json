@@ -1,0 +1,42 @@
+{
+    "_Renderable": {
+        "components": ["SpriteChar", "SpritePng"]
+    },
+    "_Physical": {
+        "components": ["Weight"]
+    },
+    "_Positional": {
+        "components": ["Position"]
+    },
+    "_Visible": {
+        "components": ["Visibility"]
+    },
+    "_Controllable": {
+        "components": ["UserControl"]
+    },
+    "_HasBody": {
+        "components": ["Body"]
+    },
+    "_HasAttributes": {
+        "components": ["AttributeList"]
+    },
+    "_Movable": {
+        "components": ["Speed"]
+    },
+
+
+    "Creature": {
+        "inherits": ["_Renderable", "_Physical", "_Positional", "_HasBody", "_Movable"],
+        "defaults": {
+            "Speed": {
+                "value": 20
+            }
+        }
+    },
+    "Player": {
+        "inherits": ["Creature", "_Controllable"]
+    },
+    "BodyPart": {
+        "inherits": ["_HasAttributes"]
+    }
+}

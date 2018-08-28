@@ -1,0 +1,61 @@
+{
+    "SpriteChar": {
+        "character": ""
+    },
+    "SpritePng": {
+        "filename": ""
+    },
+    "Container": {
+        "weightCapacity": -1,
+        "itemCapacity": -1,
+        "entities": []
+    },
+    "ContainingEntity": {
+        "entity": ""
+    },
+    "Position": {
+        "x": -1,
+        "y": 1
+    },
+    "Visibility": {
+        "value": 0
+    },
+    "Weight": {
+        "value": 0
+    },
+    "Body": {
+        "bodyParts": {
+            "__key__": {
+                "bodyPart": "",
+                "attached": false
+            }
+        },
+        "armorGroups": {
+            "__key__": {
+                "armorItems": [],
+                "bodyParts": []
+            }
+        },
+        "equipmentGroups": {
+            "__key__": {
+                "equippedItems": [],
+                "bodyParts": []
+            }
+        }
+    },
+    "Speed": {
+        "value": -1
+    },
+    "AttributeList": {
+        "str": -1,
+        "dex": -1,
+        "con": -1,
+        "cha": -1,
+        "int": -1,
+        "wis": -1,
+        "maxHP": -1,
+        "HP": -1,
+        "maxMP": -1,
+        "MP": -1
+    }
+}
