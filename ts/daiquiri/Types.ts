@@ -1,7 +1,6 @@
 export type IParsedStatement = IParsedBucketGroup | IParsedBucketOperator | IParsedDefinition;
 export type IParsedDefinition = IParsedEntityDefinition | IParsedComponentDefinition | IParsedSetDefinition;
-export type IParsedComponentDataValue = string | number;
-
+export type IParsedComponentDataValue = string | number | boolean | null;
 
 export interface IParsedLt {
     lt: IParsedComponentDataValue

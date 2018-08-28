@@ -67,9 +67,6 @@ interface IBucketStore {
 }
 
 abstract class AbstractEntityBucket implements IBucket {
-
-    protected hash: string = '';
-
     protected conditionCount = -1;
     private superSets: IBucket[] = [];
     private itemConditionCounts: {[item: string]: number} = {};
@@ -78,6 +75,8 @@ abstract class AbstractEntityBucket implements IBucket {
     abstract isGroup() : boolean;
     abstract getMode() : IParsedValidOperator;
     abstract resolve(cache: IBucketDefinitions, store: IBucketStore) : void;
+
+    protected constructor(protected hash: string) {}
 
     private getItemConditionCount(item: string) : number {
         if (this.itemConditionCounts.hasOwnProperty(item)) {
@@ -166,16 +165,16 @@ abstract class AbstractEntityBucket implements IBucket {
     }
 
     public notifyAdd(id: string): this {
-        this.superSets.forEach(set => {
-            set.attemptAdd(id);
-        });
+        for (let i = 0; i < this.superSets.length; i++) {
+            this.superSets[i].attemptAdd(id);
+        }
         return this;
     }
 
     public notifyRemove(id: string): this {
-        this.superSets.forEach(set => {
-            set.attemptRemove(id);
-        });
+        for (let i = 0; i < this.superSets.length; i++) {
+            this.superSets[i].attemptRemove(id);
+        }
         return this;
     }
 }
@@ -189,13 +188,13 @@ class EntityBucketGroup extends AbstractEntityBucket {
     protected subBuckets : IBucket[] = [];
 
     public constructor(hash: string, mode: IParsedValidOperator, buckets: IBucket[]) {
-        super();
+        super(hash);
         this.mode = mode;
         this.subBuckets = buckets;
 
-        this.subBuckets.forEach(bucket => {
-            bucket.addSuperSet(this);
-        });
+        for (let i = 0; i < this.subBuckets.length; i++) {
+            this.subBuckets[i].addSuperSet(this);
+        }
 
         this.conditionCount = this.subBuckets.length;
         this.hash = hash;
@@ -265,9 +264,7 @@ class EntityBucketGroup extends AbstractEntityBucket {
 
 class EntityBucket extends AbstractEntityBucket {
     public constructor(hash: string, private definition: IParsedDefinition) {
-        super();
-        this.hash = hash;
-
+        super(hash);
     }
 
     public static createHash(definition: IParsedDefinition) : string {
@@ -309,14 +306,19 @@ class EntityBucket extends AbstractEntityBucket {
         } else if ('component' in definition) {
             if (definition.data.length) {
                 bucketStore.component[definition.component] = bucketStore.component[definition.component] || {};
-                bucketStore.component[definition.component].data = bucketStore.component[definition.component].data || {};
+                const componentStore = bucketStore.component[definition.component];
+                componentStore.data = componentStore.data || {};
+
                 definition.data.forEach(dataItem => {
                     const key = <string>firstKey(dataItem);
-                    bucketStore.component[definition.component].data[key] = bucketStore.component[definition.component].data[key] || [];
+                    componentStore.data[key] = componentStore.data[key] || [];
+
+                    const componentDataComparators = componentStore.data[key];
                     const operation = <keyof typeof comparators>firstKey(dataItem[key]);
+
                     if (operation) {
                         const value = (<any>dataItem[key])[operation];
-                        bucketStore.component[definition.component].data[key].push([
+                        componentDataComparators.push([
                             operation,
                             value,
                             this
@@ -353,10 +355,12 @@ function compileAll(parser: IParser, config: IBucketConfig) {
         entity: {},
         component: {}
     };
+
     const parsedBuckets : IParsedBuckets = {};
     const buckets: IBucketDefinitions = {};
     const namedBuckets: IBucketDefinitions = {};
     const resolvedBuckets: IBucketDefinitions = {};
+
     for (let setName in config) {
         parsedBuckets[setName] = parser.parse(config[setName]);
     }
@@ -482,10 +486,13 @@ export default function DataStore(parser: IParser) {
                     }
                 },
                 removeEntityComponent(entityId, componentName) {
-                    if (bucketStore.component[componentName] && bucketStore.component[componentName].any) {
+                    if (bucketStore.component[componentName]) {
                         const bucketFilters = bucketStore.component[componentName];
-                        const bucket = bucketFilters.any;
-                        bucket.attemptRemove(entityId);
+
+                        if (bucketFilters.any) {
+                            bucketFilters.any.attemptRemove(entityId);
+                        }
+
                         if (bucketFilters.data) {
                             for (let key in bucketFilters.data) {
                                 if (bucketFilters.data.hasOwnProperty(key)) {
@@ -496,7 +503,6 @@ export default function DataStore(parser: IParser) {
                                 }
                             }
                         }
-
                     }
                 },
                 setEntityComponentData(entityId, componentName, key, value, oldValue) {
