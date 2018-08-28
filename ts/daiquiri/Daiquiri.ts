@@ -8,7 +8,7 @@ export interface IParser {
     createDataStore(options: IBucketConfig) : IDataStore
 }
 
-const grammar = Grammar.fromCompiled({ParserStart, ParserRules}   );
+const grammar = Grammar.fromCompiled({ParserStart, ParserRules});
 
 export const Parser : IParser = {
     parse(str: string) : IParsedBucketGroup {
