@@ -177,7 +177,7 @@ export var ParserRules: NearleyRule[] = [
     {"name": "propTail", "symbols": [{"literal":"."}, "prop"], "postprocess": add(0,1)},
     {"name": "propTail", "symbols": [], "postprocess": emptyStr},
     {"name": "identifier", "symbols": ["alphaUnder", "alphaUnderNumTail"], "postprocess": add(0,1)},
-    {"name": "alphaUnder", "symbols": [/[a-zA-Z]/], "postprocess": id},
+    {"name": "alphaUnder", "symbols": [/[a-zA-Z_]/], "postprocess": id},
     {"name": "alphaUnderNum", "symbols": ["alphaUnder"], "postprocess": id},
     {"name": "alphaUnderNum", "symbols": ["digit"], "postprocess": id},
     {"name": "digit", "symbols": [{"literal":"0"}], "postprocess": id},

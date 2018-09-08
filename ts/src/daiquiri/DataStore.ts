@@ -10,6 +10,7 @@ import {
 } from "./Types";
 import Queue from '../../util/Queue';
 import Stack from '../../util/Stack';
+import {firstKey} from "../../util/Object";
 
 interface IBucket {
     attemptAdd(id: string): this;
@@ -22,11 +23,11 @@ interface IBucket {
     getHash() : string
     isGroup(): boolean
     getMode(): IParsedValidOperator
-    resolve(cache: IBucketDefinitions, bucketStore: IBucketStore) : void;
+    resolve(cache: IBucketDefinitions, bucketStore: IEntityComponentBuckets) : void;
     clearItem(entityId: string): void;
 }
 
-export interface IDataStore {
+export interface IBucketStore {
     addEntity(entityId: string, entityTypes: string[]) : void
     removeEntity(entityId: string, entityTypes: string[]) : void
     addEntityComponent(entityId: string, componentName: string) : void
@@ -38,13 +39,6 @@ export interface IDataStore {
 
 type IBucketDefinitions = {[key: string]: IBucket};
 
-function firstKey(obj: Object) : string | undefined {
-    // noinspection LoopStatementThatDoesntLoopJS
-    for (let prop in obj) {
-        return prop;
-    }
-}
-
 const comparators = {
     eq: (a: any, b: any) => a === b,
     neq: (a: any, b: any) => a !== b,
@@ -54,7 +48,7 @@ const comparators = {
     gte: (a: any, b: any) => a >= b
 };
 
-interface IBucketStore {
+interface IEntityComponentBuckets {
     entity: {[entityName: string]: IBucket}
     component: {
         [componentName: string]: {
@@ -74,7 +68,7 @@ abstract class AbstractEntityBucket implements IBucket {
 
     abstract isGroup() : boolean;
     abstract getMode() : IParsedValidOperator;
-    abstract resolve(cache: IBucketDefinitions, store: IBucketStore) : void;
+    abstract resolve(cache: IBucketDefinitions, store: IEntityComponentBuckets) : void;
 
     protected constructor(protected hash: string) {}
 
@@ -252,7 +246,7 @@ class EntityBucketGroup extends AbstractEntityBucket {
         return this.mode;
     }
 
-    public resolve(cache: IBucketDefinitions, bucketStore: IBucketStore) : void {
+    public resolve(cache: IBucketDefinitions, bucketStore: IEntityComponentBuckets) : void {
         if (!cache[this.hash]) {
             cache[this.hash] = this;
             this.subBuckets.forEach(bucket => {
@@ -298,7 +292,7 @@ class EntityBucket extends AbstractEntityBucket {
         }
     }
 
-    private addToStore(bucketStore: IBucketStore) : void {
+    private addToStore(bucketStore: IEntityComponentBuckets) : void {
         const definition = this.definition;
         if ('entity' in definition) {
             bucketStore.entity[definition.entity] = this;
@@ -342,7 +336,7 @@ class EntityBucket extends AbstractEntityBucket {
         return '&';
     }
 
-    public resolve(cache: IBucketDefinitions, bucketStore: IBucketStore) : void {
+    public resolve(cache: IBucketDefinitions, bucketStore: IEntityComponentBuckets) : void {
         if (!cache[this.hash]) {
             this.addToStore(bucketStore);
             cache[this.hash] = this;
@@ -351,7 +345,7 @@ class EntityBucket extends AbstractEntityBucket {
 }
 
 function compileAll(parser: IParser, config: IBucketConfig) {
-    const bucketStore : IBucketStore = {
+    const bucketStore : IEntityComponentBuckets = {
         entity: {},
         component: {}
     };
@@ -445,9 +439,13 @@ function compileBucket(name: string | null, parseData: IParsedBucketGroup, parse
     return bucket;
 }
 
+export interface IBucketStoreProvider {
+    createBucketStore(options: IBucketConfig) : IBucketStore
+}
+
 export default function DataStore(parser: IParser) {
     return {
-        compile(options: IBucketConfig): IDataStore {
+        compile(options: IBucketConfig): IBucketStore {
             const {namedBuckets, bucketStore} = compileAll(parser, options);
 
             return {

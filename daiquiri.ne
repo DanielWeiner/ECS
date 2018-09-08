@@ -192,7 +192,7 @@ propTail ->
 
 identifier ->
       alphaUnder alphaUnderNumTail {% add(0,1) %}
-alphaUnder -> [a-zA-Z] {% id %}
+alphaUnder -> [a-zA-Z_] {% id %}
 alphaUnderNum ->
       alphaUnder {% id %}
     | digit {% id %}

@@ -26,15 +26,134 @@
 
 
     "Creature": {
-        "inherits": ["_Renderable", "_Physical", "_Positional", "_HasBody", "_Movable"],
+        "inherits": ["_Renderable", "_Physical", "_Positional", "_HasBody", "_Movable", "_HasAttributes"],
         "defaults": {
             "Speed": {
                 "value": 20
             }
         }
     },
-    "Player": {
-        "inherits": ["Creature", "_Controllable"]
+    "HumanoidBody": {
+        "inherits": ["_HasBody"],
+        "defaults": {
+            "Body": {
+                "bodyParts": {
+                    "leftFoot": {
+                        "bodyPart": "",
+                        "attachedTo": "leftLeg",
+                        "attached": true
+                    },
+                    "rightFoot": {
+                        "bodyPart": "",
+                        "attachedTo": "rightLeg",
+                        "attached": true
+                    },
+                    "leftLeg": {
+                        "bodyPart": "",
+                        "attachedTo": "groin",
+                        "attached": true
+                    },
+                    "rightLeg": {
+                        "bodyPart": "",
+                        "attachedTo": "groin",
+                        "attached": true
+                    },
+                    "groin": {
+                        "bodyPart": "",
+                        "attachedTo": "torso",
+                        "attached": true
+                    },
+                    "torso": {
+                        "bodyPart": "",
+                        "attachedTo": "",
+                        "attached": true
+                    },
+                    "rightArm": {
+                        "bodyPart": "",
+                        "attachedTo": "torso",
+                        "attached": true
+                    },
+                    "leftArm": {
+                        "bodyPart": "",
+                        "attachedTo": "torso",
+                        "attached": true
+                    },
+                    "rightHand": {
+                        "bodyPart": "",
+                        "attachedTo": "rightArm",
+                        "attached": true
+                    },
+                    "leftHand": {
+                        "bodyPart": "",
+                        "attachedTo": "leftArm",
+                        "attached": true
+                    },
+                    "neck": {
+                        "bodyPart": "",
+                        "attachedTo": "torso",
+                        "attached": true
+                    },
+                    "head": {
+                        "bodyPart": "",
+                        "attachedTo": "neck",
+                        "attached": true
+                    },
+                    "blah": "__DELETE__"
+                },
+                "armorGroups": {
+                    "pants": {
+                        "armorItems": [],
+                        "bodyParts": [
+                            "rightLeg",
+                            "leftLeg",
+                            "groin"
+                        ]
+                    },
+                    "shoes": {
+                        "armorItems": [],
+                        "bodyParts": [
+                            "rightFoot",
+                            "leftFoot"
+                        ]
+                    },
+                    "shirt": {
+                        "armorItems": [],
+                        "bodyParts": [
+                            "torso",
+                            "rightArm",
+                            "leftArm"
+                        ]
+                    },
+                    "gloves": {
+                        "armorItems": [],
+                        "bodyParts": [
+                            "rightHand",
+                            "leftHand"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "Human": {
+        "inherits": ["Creature", "HumanoidBody"],
+        "defaults": {
+            "Weight": {
+                "value": 150
+            },
+            "AttributeList": {
+                "str": 10,
+                "dex": 10,
+                "con": 10,
+                "int": 10,
+                "wis": 10,
+                "cha": 10,
+                "maxHP": 20,
+                "HP": 20,
+                "maxMP": 10,
+                "MP": 10
+            }
+        }
     },
     "BodyPart": {
         "inherits": ["_HasAttributes"]

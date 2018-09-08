@@ -15,7 +15,7 @@
     },
     "Position": {
         "x": -1,
-        "y": 1
+        "y": -1
     },
     "Visibility": {
         "value": 0
@@ -27,7 +27,8 @@
         "bodyParts": {
             "__key__": {
                 "bodyPart": "",
-                "attached": false
+                "attached": false,
+                "attachedTo": ""
             }
         },
         "armorGroups": {
@@ -57,5 +58,6 @@
         "HP": -1,
         "maxMP": -1,
         "MP": -1
-    }
+    },
+    "UserControl": {}
 }

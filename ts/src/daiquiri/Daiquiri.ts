@@ -1,11 +1,10 @@
 import nearley, {Grammar} from 'nearley';
 import {IBucketConfig, IParsedBucketGroup} from "./Types";
-import DataStore, {IDataStore} from "./DataStore";
+import DataStore, {IBucketStore, IBucketStoreProvider} from "./DataStore";
 import {ParserRules, ParserStart} from "./Grammar";
 
-export interface IParser {
+export interface IParser extends IBucketStoreProvider {
     parse(str: string): IParsedBucketGroup;
-    createDataStore(options: IBucketConfig) : IDataStore
 }
 
 const grammar = Grammar.fromCompiled({ParserStart, ParserRules});
@@ -16,7 +15,7 @@ export const Parser : IParser = {
         parser.feed(str);
         return parser.results[0];
     },
-    createDataStore(options: IBucketConfig) {
+    createBucketStore(options: IBucketConfig) {
         return DataStore(Parser).compile(options);
     }
 };
