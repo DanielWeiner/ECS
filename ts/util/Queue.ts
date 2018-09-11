@@ -3,7 +3,7 @@ type QueueNode<T> = {
     next: QueueNode<T>
 } | null;
 
-export default class Stack<T> {
+export default class Queue<T> {
     public push: (item: T) => void;
     public pop: () => T | undefined;
     public peek: () => T | undefined;
