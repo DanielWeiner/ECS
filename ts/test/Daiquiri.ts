@@ -2,7 +2,7 @@ import {Parser} from "../src/daiquiri/Daiquiri";
 import {expect} from 'chai';
 import uuid from 'uuid/v4';
 import {ECS} from "../index";
-import {DELETE} from "../util/Object";
+import {APPEND, OVERWRITE} from "../util/Object";
 
 describe('daiquiri', function () {
     it('should add items to a bucket', () => {
@@ -67,21 +67,15 @@ describe('daiquiri', function () {
     });
 
     it('should make an ECS context', () => {
-        console.time('createEntity');
+        //console.time('createEntity');
         const player = ECS.Entity.createEntity('Human');
-        console.timeEnd('createEntity');
-        ;
+        //console.timeEnd('createEntity');
         player.addComponent('UserControl');
-        player.set('Body', {
-            bodyParts: {
-                leftFoot: DELETE
-            }
-        })
 
         console.log(JSON.stringify(player.get('Body'), null, 2));
-        console.time('createEntity');
+        //console.time('createEntity');
         const player2 = ECS.Entity.createEntity('Human');
-        console.timeEnd('createEntity');
+        //console.timeEnd('createEntity');
 
         //ECS.Entity.destroyEntity(player.id);
         ECS.System.emit('userInput', {});

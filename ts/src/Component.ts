@@ -1,5 +1,5 @@
 import {IComponentNames, IComponents} from "../types/Component";
-import {deepClone, firstKey} from "../util/Object";
+import {APPEND, deepClone, DELETE, firstKey, OVERWRITE, REPLACE} from "../util/Object";
 
 export interface IComponentContext<C> {
     getComponentDefaults<K extends IComponentNames<C>>(name: K) : IComponents<C>[K];
@@ -11,6 +11,26 @@ export interface IComponentRegistry<C> {
 
 export interface IComponentContextCallback<C> {
     (registry: IComponentRegistry<C>): void;
+}
+
+function getProp(data: any, prop: string) {
+    if (Array.isArray(data[prop])) {
+        if (data[prop][0] === '__REPLACE__') {
+            return REPLACE(data[prop][1]);
+        }
+        if (data[prop][0] === '__APPEND__') {
+            return APPEND(data[prop][1]);
+        }
+        if (data[prop][0] === '__OVERWRITE__') {
+            return OVERWRITE(data[prop][1]);
+        }
+    }
+
+    if (data[prop] === '__DELETE__') {
+        return DELETE();
+    }
+
+    return mapDefaults(data[prop]);
 }
 
 export function mapDefaults(data: any): any {
@@ -25,7 +45,7 @@ export function mapDefaults(data: any): any {
     const result : any = {};
 
     for (let prop in data) {
-        result[prop] = mapDefaults(data[prop]);
+        result[prop] = getProp(data, prop);
     }
 
     return result;

@@ -2,7 +2,7 @@ import {IBucketStore} from "./daiquiri/DataStore";
 import {IComponentContext, mapDefaults} from "./Component";
 import {IEntity, IEntityDefinition, IEntityNames} from "../types/Entity";
 import {IComponentNames, IComponents} from "../types/Component";
-import {deepMerge, getDeepKeys, getDeepProperty} from "../util/Object";
+import {deepClone, deepMerge, DELETE, getDeepKeys, getDeepProperty} from "../util/Object";
 import uuid from 'uuid/v4';
 
 export interface IEntityContext<E, C> {
@@ -158,14 +158,16 @@ export default function createEntityContext<E, C>(bucketStore: IBucketStore, com
             if (!meta.components.has(componentName)) {
                 throw new Error('Entity ' + meta.id + ' does not have component: ' + componentName);
             }
-            const deepKeys = getDeepKeys(data);
 
-            //TODO: detect when keys are removed from existing data
+            const cloned = deepClone(data);
+            const deepKeys = getDeepKeys(cloned);
+
             deepKeys.forEach(deepKey => {
-                const newValue = getDeepProperty(data, deepKey);
+                const newValue = getDeepProperty(cloned, deepKey);
                 const oldValue = getDeepProperty(meta.componentData[componentName] || {}, deepKey);
                 bucketStore.setEntityComponentData(meta.id, componentName, deepKey, newValue, oldValue);
             });
+
             meta.componentData[componentName] = deepMerge(meta.componentData[componentName] || {}, data);
         }
 

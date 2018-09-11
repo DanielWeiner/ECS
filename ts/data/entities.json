@@ -97,8 +97,7 @@
                         "bodyPart": "",
                         "attachedTo": "neck",
                         "attached": true
-                    },
-                    "blah": "__DELETE__"
+                    }
                 },
                 "armorGroups": {
                     "pants": {

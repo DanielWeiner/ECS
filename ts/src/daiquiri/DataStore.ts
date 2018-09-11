@@ -11,6 +11,7 @@ import {
 import Queue from '../../util/Queue';
 import Stack from '../../util/Stack';
 import {firstKey} from "../../util/Object";
+import {_DELETE} from "../../types/Types";
 
 interface IBucket {
     attemptAdd(id: string): this;
@@ -272,7 +273,7 @@ class EntityBucket extends AbstractEntityBucket {
         } else if ('entity' in definition) {
             return 'entity:' + definition.entity;
         } else {
-            throw new Error('Unknown type definition: ' + firstKey(definition));
+            throw new Error('Unknown type definition: ' + (firstKey(definition) || '').toString());
         }
     }
 
@@ -509,7 +510,8 @@ export default function DataStore(parser: IParser) {
 
                         filters.forEach(filter => {
                             const [operation, compValue, bucket] = filter;
-                            const comparator = comparators[operation];
+                            const shouldDelete = value === _DELETE;
+                            const comparator = shouldDelete? () => false : comparators[operation];
                             const resolution = comparator(value, compValue);
                             const lastResolution = oldValue === undefined? false : comparator(oldValue, compValue);
 
